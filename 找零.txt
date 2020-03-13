@@ -1,0 +1,79 @@
+#include<iostream>
+#include<algorithm>//借用min
+#include<vector>
+using namespace std;
+
+//动态规划
+/*
+int main() {
+	int n;
+	cin >> n;
+	vector<int> coins;
+	coins.push_back(0);
+	for (int i = 0; i < n; i++) {
+		int coin;
+		cin >> coin;
+		coins.push_back(coin);
+	}
+	int amount;
+	cin >> amount;
+
+	vector<vector<int>> table;
+	for (int i = 0; i <= n; i++) {
+		table.push_back(vector<int>(amount + 1, -1));
+		table[i][0] = 0;
+	}
+
+	for (int i = 1; i <= n; i++) {
+		for (int j = 1; j <= amount; j++) {
+			if (j < coins[i])
+				table[i][j] = table[i - 1][j];
+			else {
+				if (table[i][j - coins[i]] == -1)
+					table[i][j] = table[i - 1][j];
+				else {
+					if (table[i - 1][j] == -1)
+						table[i][j] = table[i][j - coins[i]] + 1;
+					else table[i][j] = min(table[i][j - coins[i]] + 1, table[i - 1][j]);
+				}
+			}
+		}
+	}
+	cout << table[n][amount];
+}
+*/
+
+//递归
+int cal(vector<int> coins,int amount) {
+	if (coins.size() == 0)
+		return -1;
+	if (amount == 0)
+		return 0;
+	if (amount <coins[coins.size() - 1]) {
+		coins.pop_back();
+		return cal(coins, amount);
+	}
+	else {
+		int result = cal(coins, amount - coins[coins.size() - 1]);
+		if (result != -1)
+			return result + 1;
+		else {
+			coins.pop_back();
+			return cal(coins, amount);
+		}
+	}
+}
+
+int main() {
+	int n;
+	cin >> n;
+	vector<int> coins;
+	for (int i = 0; i < n; i++) {
+		int coin;
+		cin >> coin;
+		coins.push_back(coin);
+	}
+	int amount;
+	cin >> amount;
+	cout << cal(coins, amount);
+}
